@@ -3,7 +3,7 @@ from tkinter import Label, Button, Entry
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import numpy as np
-from helper_without_wall_constrain import differential_equation, runge_kutta_method, euler_method, modified_euler_method, runge_kutta_alt_method, modified_euler_alt
+from helper import differential_equation, runge_kutta_method, euler_method, modified_euler_method, runge_kutta_alt_method, modified_euler_alt
 from tkinter import ttk
 
 def plot_graph(v0, h,m, k, mu_d, mu_s):
@@ -15,21 +15,24 @@ def plot_graph(v0, h,m, k, mu_d, mu_s):
     t = np.arange(0, 1100, h)
     x0 = 1.0
     
+    wall = True
+    if selected_wall.get() == "ne":
+        wall = False
     
     # Ocistimo ako je nesto bilo pre
     #ax.clear()
     
     selected_m = selected_method.get()
     if selected_m == "RK4":
-        v, x = runge_kutta_method(differential_equation, v0, x0, t, m, k, mu_s, mu_d, g)
+        v, x = runge_kutta_method(differential_equation, v0, x0, t, m, k, mu_s, mu_d, g, wall)
     elif selected_m == "Ojler":
-        v, x = euler_method(differential_equation, v0, x0, t, m, k, mu_s, mu_d, g)
+        v, x = euler_method(differential_equation, v0, x0, t, m, k, mu_s, mu_d, g, wall)
     elif selected_m == "ModOjler":
-        v,x = modified_euler_method(differential_equation, v0, x0, t, m, k, mu_s, mu_d, g)
+        v,x = modified_euler_method(differential_equation, v0, x0, t, m, k, mu_s, mu_d, g, wall)
     elif selected_m == "RK4a":
-        v, x = runge_kutta_alt_method(differential_equation, v0, x0, t, m, k, mu_s, mu_d, g)
+        v, x = runge_kutta_alt_method(differential_equation, v0, x0, t, m, k, mu_s, mu_d, g, wall)
     else:
-        v,x = modified_euler_alt(differential_equation, v0, x0, t, m, k, mu_s, mu_d, g)
+        v,x = modified_euler_alt(differential_equation, v0, x0, t, m, k, mu_s, mu_d, g, wall)
         
 
     selected = selected_option.get()
@@ -123,11 +126,14 @@ label_parameter6.pack(pady=5)
 entry_parameter6 = Entry(left_frame)
 entry_parameter6.insert(0, "0.5")
 entry_parameter6.pack(pady=5)
+separator = ttk.Separator(right_frame, orient="horizontal")
+
+separator.pack(padx=10, pady=20, fill="x")
 
 
 label_parameter5 = Label(right_frame, text="Izaberi numericku metodu:")
 label_parameter5.configure(font=(17))
-label_parameter5.pack(pady=15)
+label_parameter5.pack(pady=5)
 selected_method = tk.StringVar()
 #vrsta metode
 radio_button5 = tk.Radiobutton(right_frame, text="RK4 metoda", variable=selected_method, value="RK4")
@@ -158,6 +164,19 @@ radio_button2.pack(pady=5)
 radio_button2.select()
 radio_button3 = tk.Radiobutton(right_frame, text="Pozicija", variable=selected_option, value="Pozicija")
 radio_button3.pack(pady=5)
+
+separator = ttk.Separator(right_frame, orient="horizontal")
+separator.pack(padx=10, pady=20, fill="x")
+
+label_parameter7 = Label(right_frame, text="Zid kao ogranicenje:")
+label_parameter7.configure(font=(17))
+label_parameter7.pack(pady=15)
+selected_wall = tk.StringVar()
+radio_button_zid_da = tk.Radiobutton(right_frame, text="Da", variable=selected_wall, value="da")
+radio_button_zid_da.pack(pady=5)
+radio_button_zid_da.select()
+radio_button_zid_ne = tk.Radiobutton(right_frame, text="Ne", variable=selected_wall, value="ne")
+radio_button_zid_ne.pack(pady=5)
 
 separator = ttk.Separator(right_frame, orient="horizontal")
 separator.pack(padx=10, pady=20, fill="x")

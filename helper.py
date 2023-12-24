@@ -5,6 +5,8 @@ import math
 
 #opruga uvek utice negativno na intenzitet brzine, kada idemo od nje ona nas vuce nazad, kada idemo ka njoj i suzbijamo je - ona nas gura od sebe
 
+
+
 def differential_equation(v, x, t, m, k, mu_s, mu_d, g):
     dxdt = v
 
@@ -22,7 +24,7 @@ def differential_equation(v, x, t, m, k, mu_s, mu_d, g):
 
 
 
-def runge_kutta_method(f, v0, x0, t, m, k, mu_s, mu_d, g):
+def runge_kutta_method(f, v0, x0, t, m, k, mu_s, mu_d, g, wall):
     h = t[1] - t[0]
     v = np.zeros_like(t)
     x = np.zeros_like(t)
@@ -58,6 +60,12 @@ def runge_kutta_method(f, v0, x0, t, m, k, mu_s, mu_d, g):
         #    if counter == (len(t) / 10):
         #        break
 
+        if wall == True:
+            if x[i] <= -100:
+                x[i] = -100
+                e = 0.65   #(koeficijent restitucije)
+                v[i] = -e * v[i]
+            
         if v[i] == v[i-1]:
             #print(counter)
             counter += 1
@@ -71,6 +79,7 @@ def runge_kutta_method(f, v0, x0, t, m, k, mu_s, mu_d, g):
 #napomena:sto veca masa to manja promena, za vece telo ce trebati vise vremena da promeni svoje stanje
 
 #Parametri
+'''
 
 
 #m = 10.0 # masa tela
@@ -107,7 +116,7 @@ x0 = 1.0
 
     # Rešavanje diferencijalne jednačine Runge-Kutta metodom
 v, x = runge_kutta_method(differential_equation, v0, x0, t, m, k, mu_s, mu_d, g)
-
+'''
 # Prikaz rezultata
 def prikazi_brzinu(t,v):
     plt.plot(t, v, label='Brzina')
@@ -148,7 +157,7 @@ plt.legend()
 plt.grid(True)
 '''
 
-def euler_method(f, v0, x0, t, m, k, mu_s, mu_d, g):
+def euler_method(f, v0, x0, t, m, k, mu_s, mu_d, g, wall):
     h = t[1] - t[0]
     v = np.zeros_like(t)
     x = np.zeros_like(t)
@@ -159,6 +168,14 @@ def euler_method(f, v0, x0, t, m, k, mu_s, mu_d, g):
         dvdt, dxdt = f(v[i-1], x[i-1], t[i-1], m, k, mu_s, mu_d, g)
         v[i] = v[i-1] + dvdt * h
         x[i] = x[i-1] + dxdt * h
+        
+        if wall == True:
+            if x[i] <= -100:
+                x[i] = -100
+                e = 0.65   #(koeficijent restitucije)
+                v[i] = -e * v[i]
+        
+
 
     return v, x
 '''
@@ -188,7 +205,7 @@ plt.title('Energija tela s oprugom i trenjem')
 plt.legend()
 plt.grid(True)
 '''
-def modified_euler_method(f, v0, x0, t, m, k, mu_s, mu_d, g):
+def modified_euler_method(f, v0, x0, t, m, k, mu_s, mu_d, g, wall):
     h = t[1] - t[0]
     v = np.zeros_like(t)
     x = np.zeros_like(t)
@@ -203,6 +220,13 @@ def modified_euler_method(f, v0, x0, t, m, k, mu_s, mu_d, g):
 
         v[i] = v[i-1] + k2v * h
         x[i] = x[i-1] + k2x * h
+        
+        if wall == True:
+            if x[i] <= -100:
+                x[i] = -100
+                e = 0.65   #(koeficijent restitucije)
+                v[i] = -e * v[i]
+        
 
     return v, x    
 
@@ -233,7 +257,7 @@ plt.legend()
 plt.grid(True)
 
 '''
-def runge_kutta_alt_method(f, v0, x0, t, m, k, mu_s, mu_d, g):
+def runge_kutta_alt_method(f, v0, x0, t, m, k, mu_s, mu_d, g, wall):
     h = t[1] - t[0]
     v = np.zeros_like(t)
     x = np.zeros_like(t)
@@ -263,6 +287,12 @@ def runge_kutta_alt_method(f, v0, x0, t, m, k, mu_s, mu_d, g):
         #    counter += 1
         #    if counter == (len(t) / 10):
         #        break
+        
+        if wall == True:
+            if x[i] <= -100:
+                x[i] = -100
+                e = 0.65   #(koeficijent restitucije)
+                v[i] = -e * v[i]
 
         if v[i] == v[i-1]:
             print(counter)
@@ -298,7 +328,8 @@ plt.title('Energija tela s oprugom i trenjem')
 plt.legend()
 plt.grid(True)
 '''
-def modified_euler_alt(f, v0, x0, t, m, k, mu_s, mu_d, g):
+
+def modified_euler_alt(f, v0, x0, t, m, k, mu_s, mu_d, g, wall):
     h = t[1] - t[0]
     v = np.zeros_like(t)
     x = np.zeros_like(t)
@@ -315,6 +346,12 @@ def modified_euler_alt(f, v0, x0, t, m, k, mu_s, mu_d, g):
 
         v[i] = v[i-1] + ((v_2 + v_1) * 0.5 * h)
         x[i] = x[i-1] + ((x_2 + x_1) * 0.5 * h)
+        
+        if wall == True:
+            if x[i] <= -100:
+                x[i] = -100
+                e = 0.65   #(koeficijent restitucije)
+                v[i] = -e * v[i]
 
     return v, x    
 '''
