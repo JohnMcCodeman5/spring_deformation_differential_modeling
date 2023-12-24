@@ -6,11 +6,11 @@ import numpy as np
 from helper_without_wall_constrain import differential_equation, runge_kutta_method, euler_method, modified_euler_method, runge_kutta_alt_method, modified_euler_alt
 from tkinter import ttk
 
-def plot_graph(v0, h,m, k):
+def plot_graph(v0, h,m, k, mu_d, mu_s):
     #m = 20.0
     #k = 0.1 
-    mu_s = 0.5  # koeficijent statičkog trenja
-    mu_d = 0.1  # koeficijent dinamičkog trenja
+    #mu_s = 0.5  # koeficijent statičkog trenja
+    #mu_d = 0.1  # koeficijent dinamičkog trenja
     g = 9.81  # ubrzanje usled gravitacije
     t = np.arange(0, 1100, h)
     x0 = 1.0
@@ -50,7 +50,7 @@ def plot_graph(v0, h,m, k):
         ax.set_title('Energija tela s oprugom i trenjem')
         canvas.draw()
     elif selected == "Pozicija":
-        ax.plot(t, x, label='Pozicija (deformacija opruge)', color='red')
+        ax.plot(t, x, label='Pozicija (deformacija opruge)')
         ax.set_xlabel('Vreme (s)')
         ax.set_ylabel('Pozicija')
         ax.set_title('Kretanje tela s oprugom i trenjem')
@@ -63,21 +63,20 @@ def on_button_click():
     h = float(entry_parameter2.get())
     m = float(entry_parameter3.get())
     k = float(entry_parameter4.get())
-    plot_graph(v, h, m, k)
+    m_d = float(entry_parameter5.get())
+    m_s = float(entry_parameter6.get())
+    plot_graph(v, h, m, k,m_d,m_s)
     
 def on_button_click_clear():
     ax.clear()
     canvas.draw()
 
-def on_closing():
-    root.destroy()
 
 # root prozor
 root = tk.Tk()
 root.geometry("1200x800")
 #root.configure(bg="lightgray")
 root.title("Spring Deformation Differential Modeling")
-root.protocol("WM_DELETE_WINDOW", on_closing)
 
 #cisto kozmeticki da ih razdvojim
 left_frame = tk.Frame(root)
@@ -113,6 +112,18 @@ entry_parameter4 = Entry(left_frame)
 entry_parameter4.insert(0, "0.1")
 entry_parameter4.pack(pady=5)
 
+label_parameter5 = Label(left_frame, text="Koef. Dinamickog trenja:", font=14)
+label_parameter5.pack(pady=5)
+entry_parameter5 = Entry(left_frame)
+entry_parameter5.insert(0, "0.1")
+entry_parameter5.pack(pady=5)
+
+label_parameter6 = Label(left_frame, text="Koef. Statickog trenja:", font=14)
+label_parameter6.pack(pady=5)
+entry_parameter6 = Entry(left_frame)
+entry_parameter6.insert(0, "0.5")
+entry_parameter6.pack(pady=5)
+
 
 label_parameter5 = Label(right_frame, text="Izaberi numericku metodu:")
 label_parameter5.configure(font=(17))
@@ -128,7 +139,7 @@ radio_button7 = tk.Radiobutton(right_frame, text="Modifikovana Ojlerova metoda",
 radio_button7.pack(anchor="w",pady=5)
 radio_button8 = tk.Radiobutton(right_frame, text="RK4 Alternativna Metoda", variable=selected_method, value="RK4a")
 radio_button8.pack(anchor="w",pady=5)
-radio_button9 = tk.Radiobutton(right_frame, text="Alternativna Modifokovana Ojlerova Metoda", variable=selected_method, value="AltOj")
+radio_button9 = tk.Radiobutton(right_frame, text="Alternativna Modifikovana Ojlerova Metoda", variable=selected_method, value="AltOj")
 radio_button9.pack(anchor="w",pady=5)
 
 separator = ttk.Separator(right_frame, orient="horizontal")
